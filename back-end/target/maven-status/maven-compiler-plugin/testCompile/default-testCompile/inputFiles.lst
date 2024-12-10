@@ -1,0 +1,6 @@
+/home/mmanyuu/sctp/Module-3-Milestone-Project-Split-And-Share/back-end/src/test/java/sg/edu/ntu/split_and_share/SplitAndShareApplicationTests.java
+/home/mmanyuu/sctp/Module-3-Milestone-Project-Split-And-Share/back-end/src/test/java/sg/edu/ntu/split_and_share/controller/DashboardController.java
+/home/mmanyuu/sctp/Module-3-Milestone-Project-Split-And-Share/back-end/src/test/java/sg/edu/ntu/split_and_share/controller/ExpenseControllerTest.java
+/home/mmanyuu/sctp/Module-3-Milestone-Project-Split-And-Share/back-end/src/test/java/sg/edu/ntu/split_and_share/controller/GroupMemberControllerTest.java
+/home/mmanyuu/sctp/Module-3-Milestone-Project-Split-And-Share/back-end/src/test/java/sg/edu/ntu/split_and_share/controller/UserControllerTest.java
+/home/mmanyuu/sctp/Module-3-Milestone-Project-Split-And-Share/back-end/src/test/java/sg/edu/ntu/split_and_share/service/TestServiceForTest.java
