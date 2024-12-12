@@ -5,10 +5,10 @@ sg/edu/ntu/split_and_share/service/ExpenseService.class
 sg/edu/ntu/split_and_share/repository/ExpenseRepository.class
 sg/edu/ntu/split_and_share/entity/Dashboard.class
 sg/edu/ntu/split_and_share/entity/Expense.class
-sg/edu/ntu/split_and_share/repository/DashboardRepository.class
 sg/edu/ntu/split_and_share/config/CorsConfig$1.class
-sg/edu/ntu/split_and_share/service/GroupMemberService.class
+sg/edu/ntu/split_and_share/repository/DashboardRepository.class
 sg/edu/ntu/split_and_share/service/UserService.class
+sg/edu/ntu/split_and_share/service/GroupMemberService.class
 sg/edu/ntu/split_and_share/controller/UserController.class
 sg/edu/ntu/split_and_share/SplitAndShareApplication.class
 sg/edu/ntu/split_and_share/repository/GroupMemberRepository.class
@@ -26,3 +26,4 @@ sg/edu/ntu/split_and_share/controller/DashboardController.class
 sg/edu/ntu/split_and_share/service/ExpenseServiceImpl.class
 sg/edu/ntu/split_and_share/entity/GroupMember.class
 sg/edu/ntu/split_and_share/entity/User.class
+sg/edu/ntu/split_and_share/entity/User$UserBuilder.class
