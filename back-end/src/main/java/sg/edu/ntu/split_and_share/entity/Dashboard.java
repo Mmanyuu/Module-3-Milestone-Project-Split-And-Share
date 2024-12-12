@@ -2,6 +2,7 @@ package sg.edu.ntu.split_and_share.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.CascadeType;
@@ -39,9 +40,11 @@ public class Dashboard {
   private String name;
 
   @OneToMany(mappedBy = "dashboard", cascade = CascadeType.ALL)
+  @JsonIgnore
   private List<Expense> expenses;
 
   @OneToMany(mappedBy = "dashboard", cascade = CascadeType.ALL)
+  @JsonIgnore
   private List<GroupMember> groupMembers;
 
   public Long getId() {

@@ -8,7 +8,7 @@ public interface ExpenseService {
 
   Expense addExpense(Expense expense, String username);
 
-  Expense editExpense(Long id, Expense newDetails);
+  Expense updateExpense(Long id, Expense newDetails);
 
   void deleteExpense(Long id);
 

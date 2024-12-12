@@ -2,6 +2,8 @@ package sg.edu.ntu.split_and_share.entity;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
@@ -18,6 +20,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@JsonIgnoreProperties({ "expenses" }) // Ignore the "expenses" field during serialization
 public class GroupMember {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,11 +38,12 @@ public class GroupMember {
   private Double balance = 0.0;
 
   @ManyToOne
-  @JsonIgnoreProperties("groupMembers")
-  @JoinColumn(name = "dashboard_username", nullable = false)
+  @JsonIgnore
+  @JoinColumn(name = "dashboard_id", nullable = false)
   private Dashboard dashboard;
 
   @ManyToMany(mappedBy = "sharedBy") // Bidirectional mapping
+  @JsonBackReference
   private Set<Expense> expenses;
 
   public Long getId() {

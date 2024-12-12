@@ -15,4 +15,8 @@ public interface GroupMemberRepository extends JpaRepository<GroupMember, Long> 
   // Find all members that belong to a given dashboard ID
   List<GroupMember> findByDashboard_Id(Long dashboardId);
 
+  // Custom method to find a GroupMember by their memberName
+  // used in addExpense()
+  Optional<GroupMember> findByMemberName(String memberName);
+
 }

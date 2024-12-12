@@ -30,7 +30,7 @@ public class ExpenseController {
   // Create a new expense
   // http://localhost:8080/api/expense/{username}/add
   @PostMapping("/{username}/add")
-  public ResponseEntity<Expense> createExpense(@PathVariable String username, @Valid @RequestBody Expense expense) {
+  public ResponseEntity<Expense> addExpense(@PathVariable String username, @Valid @RequestBody Expense expense) {
     Expense createdExpense = expenseService.addExpense(expense, username);
     return new ResponseEntity<>(createdExpense, HttpStatus.CREATED);
   }
@@ -55,7 +55,7 @@ public class ExpenseController {
   // http://localhost:8080/api/expense/{id}
   @PutMapping("/{id}")
   public ResponseEntity<Expense> updateExpense(@PathVariable Long id, @Valid @RequestBody Expense newDetails) {
-    Expense updatedExpense = expenseService.editExpense(id, newDetails);
+    Expense updatedExpense = expenseService.updateExpense(id, newDetails);
     return new ResponseEntity<>(updatedExpense, HttpStatus.OK);
   }
 
