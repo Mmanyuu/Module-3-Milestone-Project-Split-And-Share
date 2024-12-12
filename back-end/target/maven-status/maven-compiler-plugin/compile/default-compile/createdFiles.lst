@@ -26,4 +26,3 @@ sg/edu/ntu/split_and_share/controller/DashboardController.class
 sg/edu/ntu/split_and_share/service/ExpenseServiceImpl.class
 sg/edu/ntu/split_and_share/entity/GroupMember.class
 sg/edu/ntu/split_and_share/entity/User.class
-sg/edu/ntu/split_and_share/entity/User$UserBuilder.class
