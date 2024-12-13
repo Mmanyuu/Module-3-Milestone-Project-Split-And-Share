@@ -127,7 +127,8 @@ public class ExpenseServiceImpl implements ExpenseService {
           return new ExpenseNotFoundException();
         });
 
-    // Validate new details
+    // Validate new details (exclude sharedBy as it can be an expense with only 1
+    // member which means sharedBy could be null)
     if (newDetails.getType() == null || newDetails.getAmount() == null || newDetails.getPaidBy() == null) {
       logger.error("Invalid expense details provided for update");
       throw new IllegalArgumentException("Expense details cannot be null");
@@ -254,7 +255,7 @@ public class ExpenseServiceImpl implements ExpenseService {
     // Subtract the shared amounts from the balances of the members
     removeOldSharedAmounts(expense);
 
-    // Clear associations
+    // Clear associations (it detaches all group members from this expense)
     expense.getSharedBy().clear();
     expense.setDashboard(null);
 
