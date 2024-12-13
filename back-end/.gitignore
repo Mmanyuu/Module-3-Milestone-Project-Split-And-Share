@@ -1,6 +1,6 @@
 /target/
 !.mvn/wrapper/maven-wrapper.properties
-/src/main/resources/application.properties
+\back-end/src/main/resources/application.properties
 
 ### STS ###
 .apt_generated
