@@ -42,6 +42,7 @@ public class GroupMemberServiceImpl implements GroupMemberService {
           logger.error("No dashboard found in the database");
           return new DashboardNotFoundException();
         });
+    logger.info("Fetched dashboard for username: {}", username);
 
     // Save each group member using a for loop
     for (String groupMember : groupMemberList) {
@@ -53,7 +54,7 @@ public class GroupMemberServiceImpl implements GroupMemberService {
       groupMemberRepository.save(member);
       logger.info("Added member '{}' successfully to the dashboard '{}'", groupMember, dashboard.getName());
     }
-
+    logger.info("Successfully added all group members to the dashboard for username: {}", username);
     return groupMemberList;
   }
 

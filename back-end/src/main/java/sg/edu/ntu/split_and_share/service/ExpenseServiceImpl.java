@@ -45,7 +45,7 @@ public class ExpenseServiceImpl implements ExpenseService {
   @Transactional
   @Override
   public Expense addExpense(Expense expense, String username) {
-    logger.info("Attempting to add group expense to the active dashboard");
+    logger.info("Attempting to add expense to the active dashboard");
     // Fetch the dashboard
     Dashboard dashboard = dashboardRepository.findByUser_Username(username)
         .orElseThrow(() -> {

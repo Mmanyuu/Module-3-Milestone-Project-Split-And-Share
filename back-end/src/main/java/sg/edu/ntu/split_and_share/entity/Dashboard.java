@@ -39,11 +39,14 @@ public class Dashboard {
   @Column(name = "name", nullable = false)
   private String name;
 
-  @OneToMany(mappedBy = "dashboard", cascade = CascadeType.ALL)
+  // "orphanRemoval = true" makes sure when expense table is removed, all related
+  // entities are deleted as well, this is essential in order to properly execute
+  // resetDashboard()
+  @OneToMany(mappedBy = "dashboard", cascade = CascadeType.ALL, orphanRemoval = true)
   @JsonIgnore
   private List<Expense> expenses;
 
-  @OneToMany(mappedBy = "dashboard", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "dashboard", cascade = CascadeType.ALL, orphanRemoval = true)
   @JsonIgnore
   private List<GroupMember> groupMembers;
 

@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +30,7 @@ public class DashboardServiceImpl implements DashboardService {
     this.dashboardRepository = dashboardRepository;
   }
 
-  // Calculate the grand total of all expenses
+  // Get total sum of all expenses
   @Override
   public double calculateTotalSum(String username) {
     logger.info("Calculating total sum of expenses for username: {}", username);
@@ -48,7 +50,7 @@ public class DashboardServiceImpl implements DashboardService {
     return totalSum;
   }
 
-  // Calculate total sum of each expense type
+  // Get total sum of each expense type
   @Override
   public Map<String, Double> sumExpensesByType(String username) {
     logger.info("Calculating total sum of each expense type for username: {}", username);
@@ -87,7 +89,7 @@ public class DashboardServiceImpl implements DashboardService {
     return expenseCountByType;
   }
 
-  // Grand total number of expenses
+  // Get total number of expenses
   @Override
   public long countTotalNumberOfExpenses(String username) {
     logger.info("Counting total number of expenses for username: {}", username);
@@ -103,10 +105,10 @@ public class DashboardServiceImpl implements DashboardService {
     return totalNumberOfExpenses;
   }
 
-  // Calculate individual/group member balances
+  // Calculate individual member's net balances
   @Override
   public Map<String, Double> calculateNetBalances(String username) {
-    logger.info("Calculating net balances for username: {}", username);
+    logger.info("Calculating net balances for all members on {}", username + "'s dashboard");
     // Fetch the dashboard
     Dashboard dashboard = dashboardRepository.findByUser_Username(username)
         .orElseThrow(() -> {
@@ -114,28 +116,55 @@ public class DashboardServiceImpl implements DashboardService {
           return new DashboardNotFoundException();
         });
 
+    // Initialize balances with all group members set to zero
+    // Add each member to the map with a balance of 0.0
     Map<String, Double> balances = new HashMap<>();
+    for (GroupMember member : dashboard.getGroupMembers()) {
+      balances.put(member.getMemberName(), 0.0);
+    }
+    logger.info("Initialized balances for all group members to zero.");
 
     for (Expense expense : dashboard.getExpenses()) {
       String payer = expense.getPaidBy();
+      logger.info("Processing expense paid by: {}", payer);
 
       // Map sharedBy from GroupMember to their names
+      // Converts the set of GroupMember objects to a set of member names
       Set<String> sharers = expense.getSharedBy()
           .stream()
           .map(GroupMember::getMemberName)
           .collect(Collectors.toSet());
+      logger.info("Expense shared by: {}", sharers);
 
-      // Payer's balance
-      balances.put(payer, balances.getOrDefault(payer, 0.0) + expense.getAmount());
+      // Calculate the share amount using BigDecimal for precision
+      BigDecimal totalAmount = BigDecimal.valueOf(expense.getAmount());
+      BigDecimal individualShare = totalAmount
+          .divide(BigDecimal.valueOf(sharers.size()), 2, RoundingMode.HALF_UP);
+      logger.info("Total amount: {}, Individual share: {}", totalAmount, individualShare);
 
-      // Shared members' balances
-      double shareAmount = expense.getAmount() / sharers.size();
+      // Update payer's balance
+      // Retrieves the current balance for the payer or defaults to 0.0 if not present
+      // Adds the payer's net contribution to their balance
+      BigDecimal payerBalance = BigDecimal.valueOf(balances.getOrDefault(payer, 0.0))
+          .add(totalAmount.subtract(individualShare));
+      balances.put(payer, payerBalance.setScale(2, RoundingMode.HALF_UP).doubleValue());
+      logger.info("Updated balance for payer '{}': {}", payer, payerBalance.setScale(2, RoundingMode.HALF_UP));
+
+      // Update shared members' balances
       for (String sharer : sharers) {
-        balances.put(sharer, balances.getOrDefault(sharer, 0.0) - shareAmount);
+        // Ensures the payer's balance is not updated again.
+        if (!sharer.equals(payer)) {
+          // Retrieves the current balance for the sharer and subtracts their share of the
+          // expense.
+          BigDecimal sharerBalance = BigDecimal.valueOf(balances.getOrDefault(sharer, 0.0))
+              .subtract(individualShare);
+          balances.put(sharer, sharerBalance.setScale(2, RoundingMode.HALF_UP).doubleValue());
+          logger.info("Updated balance for sharer '{}': {}", sharer, sharerBalance.setScale(2, RoundingMode.HALF_UP));
+        }
       }
     }
 
-    logger.info("Calculated net balances for username {}: {}", username, balances);
+    logger.info("Calculated net balances for username all members: {}", balances);
     return balances;
   }
 
@@ -159,16 +188,29 @@ public class DashboardServiceImpl implements DashboardService {
   @Override
   public void resetDashboard(String username) {
     logger.info("Resetting dashboard for username: {}", username);
+    // Fetch the dashboard
     Dashboard dashboard = dashboardRepository.findByUser_Username(username)
         .orElseThrow(() -> {
           logger.error("Dashboard not found for username: {}", username);
           return new DashboardNotFoundException();
         });
+    logger.info("Fetched dashboard for username: {}", username);
 
-    // Clear the lists of expenses and group members
-    dashboard.getExpenses().clear();
-    dashboard.getGroupMembers().clear();
+    // Remove all expenses
+    if (dashboard.getExpenses() != null) {
+      dashboard.getExpenses().forEach(expense -> expense.setDashboard(null));
+      dashboard.getExpenses().clear();
+      logger.info("Cleared all expenses for dashboard of username: {}", username);
+    }
 
+    // Remove all group members
+    if (dashboard.getGroupMembers() != null) {
+      dashboard.getGroupMembers().forEach(member -> member.setDashboard(null));
+      dashboard.getGroupMembers().clear();
+      logger.info("Cleared all group members for dashboard of username: {}", username);
+    }
+
+    // Save the dashboard to persist changes
     dashboardRepository.save(dashboard);
     logger.info("Dashboard reset successfully for username: {}", username);
   }

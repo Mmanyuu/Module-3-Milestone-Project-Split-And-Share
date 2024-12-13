@@ -20,7 +20,7 @@ public class DashboardController {
     this.dashboardService = dashboardService;
   }
 
-  // Calculate the grand total of all expenses
+  // Get total sum of all expenses
   // http://localhost:8080/api/dashboard/{username}/total-sum
   @GetMapping("/{username}/total-sum")
   public ResponseEntity<Double> calculateTotalSum(@PathVariable String username) {
@@ -28,7 +28,7 @@ public class DashboardController {
     return new ResponseEntity<>(totalSum, HttpStatus.OK);
   }
 
-  // Calculate total sum of each expense type
+  // Get total sum of each expense type
   // http://localhost:8080/api/dashboard/{username}/sum-by-type
   @GetMapping("/{username}/sum-by-type")
   public ResponseEntity<Map<String, Double>> sumExpensesByType(@PathVariable String username) {
@@ -60,7 +60,7 @@ public class DashboardController {
     return new ResponseEntity<>(balances, HttpStatus.OK);
   }
 
-  // Fetch all individual expenses
+  // Fetch all expenses details
   // http://localhost:8080/api/dashboard/{username}/expenses
   @GetMapping("/{username}/expenses")
   public ResponseEntity<List<Expense>> getAllIndividualExpenses(@PathVariable String username) {
